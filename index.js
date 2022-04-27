@@ -9,6 +9,9 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     }))
     .catch((err) => console.log(err));
 
+const cors = require('cors');
+app.use(cors());
+
 const PORT = process.env.PORT || 80;
 
 /** Maps collection */
