@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
+const PORT = process.env.PORT || 80;
 
+/** MongoDB connection */
 const mongoose = require('mongoose');
 const dbURI = 'mongodb+srv://SlavaLevkovich:Unbelievable19@hots-cluster.ccjbn.mongodb.net/hots?retryWrites=true&w=majority'
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -9,39 +11,14 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     }))
     .catch((err) => console.log(err));
 
+/** CORS Middleware */
 const cors = require('cors');
 app.use(cors());
 
-const PORT = process.env.PORT || 80;
+/** Maps route */
+const mapsRouter = require('./routes/Maps');
+app.use('/maps', mapsRouter);
 
-/** Maps collection */
-const Maps = require('./models/maps')
-app.get('/maps', async (_, res) => {
-    try {
-        const maps = await Maps.find({});
-        res.send(maps);
-    } catch (error) {
-        console.log('Cannot get maps')
-        res.send(error);
-    }
-})
-
-/** Hero Classes collection */
-const HeroClasses = require('./models/heroClasses')
-app.get('/heroClasses', async (_, res) => {
-    try {
-        const heroClasses = await HeroClasses.find({});
-        res.send(heroClasses);
-    } catch (error) {
-        console.log('Cannot get hero classes')
-        res.send(error);
-    }
-})
-
-app.get('/', (_, res) => {
-    res.end('<h1>Home Page</h1>')
-})
-
-app.get('/about', (_, res) => {
-    res.end('<h1>About Page</h1>')
-})
+/** Hero Classes route */
+const heroClassesRouter = require('./routes/HeroClasses');
+app.use('/hero-classes', heroClassesRouter);
